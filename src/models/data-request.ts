@@ -2,15 +2,18 @@
 export interface IGetDataRequest {
   id: string;
   file: string;
-  context?: string;
+  context: DataContext;
+  options: any; // TODO: scoreboard, limit size
 }
 
 export interface ISaveDataRequest {
   id: string;
   file: string;
-  context?: DataContext;
+  context: DataContext;
   data: any;
 }
+
+export type DataContext = 'GENERIC' | 'SCOREBOARD';
 
 export interface IServerData {
   data: any;
@@ -18,16 +21,42 @@ export interface IServerData {
   updatedAt: number;
   lastFetchAt?: number;
   timesFetched: number;
+  timesUpdated: number;
   version: number;
 }
 
-export interface IServerFile {
-  [index: string]: IServerData;
+export type IGeneralServerFile = IServerFile<IGeneralServerData>;
+export type IScoreBoardFile = IServerFile<IScoreBoardEntry[]>;
+
+export interface IServerFile<T> {
+  fileStats: IFileStats
+  fileData: T;
 }
 
-type DataContext = 'SCOREBOARD';
+export interface IGeneralServerData {
+  [index: string]: IServerData | undefined;
+}
+
+export interface IFileStats {
+  context: DataContext;
+
+  createdAt: number;
+  updatedAt: number;
+
+  timesFetched: number;
+  timesUpdated: number;
+  lastFetchAt?: number;
+  requestToUnexistingData: number;
+
+  extra?: any;
+  version: number;
+}
 
 export interface IScoreBoardEntry {
   id: string;
-  score: string;
+  score: number;
+  createdAt: number;
+  updatedAt: number;
+  timesUpdated: number;
+  version: number;
 }
