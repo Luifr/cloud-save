@@ -3,7 +3,7 @@ import { ISaveDataRequest, IGetDataRequest, IServerData, IScoreBoardEntry, IGene
 import { getJsonFromFile, saveJsonToFile, rawJsonSave } from '../helpers/server-files';
 import { appendIfNotEndsWith } from '../helpers/string';
 
-// TODO: check if context match
+// TODO: check if context match (user subdirectory)
 // TODO: timestamp conflict
 // TODO: check version conflict
 // TODO: version update function
@@ -13,9 +13,8 @@ import { appendIfNotEndsWith } from '../helpers/string';
 // HOW: how to set .env externally (with docker)
 
 const dataPrefix = 'data';
-const version = +(process.env.SAVE_VERSION as string);
-
-if (isNaN(version)) throw Error('Version in .env is not a number');
+const gerericVersion = +(process.env.GENERIC_FILE_VERSION as string);
+const scoreboardVersion = +(process.env.SCOREBOARD_FILE_VERSION as string);
 
 export const getGenericFile = (file: string): IGeneralServerFile => {
   file = appendIfNotEndsWith(file, '.json');
@@ -63,7 +62,7 @@ export const saveGenericData = (dataRequest: ISaveDataRequest) => {
     timesFetched,
     timesUpdated,
     updatedAt: now,
-    version
+    version: gerericVersion
   }
   serverData[dataRequest.id] = newData;
 
@@ -94,7 +93,7 @@ export const saveScoreBoard = (dataRequest: ISaveDataRequest) => {
       createdAt: now,
       updatedAt: now,
       timesUpdated: 1,
-      version
+      version: scoreboardVersion
     }
     serverData.fileData.push(newEntry);
   }

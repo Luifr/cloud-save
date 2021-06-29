@@ -3,9 +3,7 @@ import { IServerFile } from '../models/data-request';
 import { dirname } from 'path';
 import { DataContext } from '../models/data-request';
 
-const version = +(process.env.SAVE_VERSION as string);
-
-if (isNaN(version)) throw Error('Version in .env is not a number');
+const fileStatsVersion = +(process.env.FILE_STATS_VERSION as string);
 
 const createDirIfNotExists = (filePath: string) => {
   const dir = dirname(filePath);
@@ -40,7 +38,7 @@ export const getJsonFromFile = <T>(filePath: string, context: DataContext, isInt
         timesFetched: isInternalRead ? 0 : 1,
         timesUpdated: 0,
         requestToUnexistingData: 0,
-        version
+        version: fileStatsVersion
       }
     };
   }
